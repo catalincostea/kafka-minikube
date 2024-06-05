@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: consumer-health-check-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: consumer-health-check-service
+  template:
+    metadata:
+      labels:
+        app: consumer-health-check-service
+    spec:
+      containers:
+        - name: consumer-health-check-service
+          image: local-registry/consumer-health-check-service:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5001
+          envFrom:
+            - configMapRef:
+                name: consumer-health-check-service-config
+        - name: prometheus-exporter
+          image: local-registry/prometheus:latest 
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus.io/port: "9090"
+    prometheus.io/scrape: "true"
+  name: consumer-health-check-service
+spec:
+  selector:
+    app: consumer-health-check-service
+  ports:
+    - name: main
+      protocol: TCP
+      port: 80
+      targetPort: 5001
+    - name: prometheus
+      protocol: TCP
+      port: 9090
+      targetPort: 8000
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: consumer-health-check-service-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: consumer-health-check-service
+  minReplicas: 1
+  maxReplicas: 3
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 50
+  
