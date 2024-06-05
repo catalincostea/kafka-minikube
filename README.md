@@ -399,3 +399,9 @@ Code instrumentation:
     # HELP http_requests_created Total HTTP Requests
     # TYPE http_requests_created gauge
     http_requests_created 1.7175607284747682e+09
+
+
+Todo, couple of things to be further enhanced:
+  - docs, to be more clear
+  - grafana/prometheus metrics and dashboards
+  - logging actual implementation
