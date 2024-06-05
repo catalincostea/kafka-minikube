@@ -17,7 +17,8 @@ popd
 
 pushd k8s
 OP=delete
-OP=apply
+OP=apply  # comment for cleaning up
+
 kubectl $OP -f config_maps.yaml
 kubectl $OP -f health_check_service_deployment.yaml
 kubectl $OP -f consumer_health_check_service_deployment.yaml

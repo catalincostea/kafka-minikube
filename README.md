@@ -10,16 +10,16 @@ messaging backbone. The team is responsible for deploying and managing these ser
 Kubernetes cluster.
 
 Task Requirements:
-Set up Local Kubernetes Cluster:
+## done - Set up Local Kubernetes Cluster:
 Install and set up a local Kubernetes cluster using a tool like Minikube. Ensure that kubectl is properly configured to
 interact with the local cluster.
 
-Set up Kafka Cluster on Kubernetes:
+## done - Set up Kafka Cluster on Kubernetes:
 Use Helm or Kubernetes manifests to deploy a Kafka cluster with at least 3 nodes within the Kubernetes
 environment.
 
-Create a topic named health_checks_topic with appropriate configurations.
-Python HealthCheckService:
+## done - Create a topic named health_checks_topic with appropriate configurations.
+## done - Python HealthCheckService:
 Write a Python service named HealthCheckService that periodically performs health checks on various
 microservices in the system.
 The service should have a REST API endpoint /check_health that retrieves the health status of different
@@ -36,12 +36,14 @@ Write another Python service named ConsumerHealthCheckService that consumes heal
 the health_checks_topic.
 The service should have a REST API endpoint /get_latest_health_check that retrieves and prints the latest health
 check results from the Kafka topic.
-Deployment Automation:
+
+## done - Deployment Automation:
 Create Kubernetes deployment manifests for both the HealthCheckService and ConsumerHealthCheckService.
 Implement a rolling deployment strategy for these services.
-Use ConfigMaps/Secrets to manage any configuration that needs to be externalized. Ensure that the services can
+
+## done - Use ConfigMaps/Secrets to manage any configuration that needs to be externalized. Ensure that the services can
 scale horizontally.
-Monitoring and Logging
+## done partially - Monitoring and Logging
 Set up monitoring for the Kafka cluster, HealthCheckService, and ConsumerHealthCheckService.
 Implement logging for both services, including printing health check results along with some text.
 
@@ -82,12 +84,12 @@ Use Helm or Kubernetes manifests to deploy a Kafka cluster with at least 3 nodes
 environment.
 Create a topic named health_checks_topic with appropriate configurations.
 
-## install helm
+## Install helm
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
 chmod 700 get_helm.sh
 ./get_helm.sh    # rm get_helm.sh
 
-## install zookeeper
+## Install zookeeper
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo update
 
@@ -124,7 +126,7 @@ helm install zookeeper bitnami/zookeeper --set replicaCount=3
   +info https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
 
 
-## install kafka
+## Install kafka
 helm install kafka bitnami/kafka --set replicaCount=3
   NAME: kafka
   LAST DEPLOYED: Mon Jun  3 10:18:15 2024
@@ -224,9 +226,10 @@ health_checks_topic
 
 
 
+# Testing, validation
 
-
-# Testing
+update config_maps.yaml with kafka outputs(as above)
+./build-deploy.sh
 
 cata@think:~/all/prj/00demos/kafka-minikube$ k port-forward svc/health-check-service 8123:80
 Forwarding from 127.0.0.1:8123 -> 5000
@@ -254,7 +257,7 @@ I have no name!@kafka-controller-2:/$ kafka-console-consumer.sh --bootstrap-serv
 
 
 
-# Logging
+# Logging (tbd)
 
 With propper resources and time I would set up the endpoint to recieve a fluentd configured sidecar, as bellow:
 
@@ -263,8 +266,6 @@ https://kubernetes.io/docs/concepts/cluster-administration/logging/#sidecar-cont
 
 # Monitoring setup
 minikube addons enable metrics-server
-
-
 (https://maxat-akbanov.com/prometheus-and-grafana-setup-in-minikube)
 
 ## Prometheus
